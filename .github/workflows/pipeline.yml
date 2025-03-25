@@ -13,7 +13,7 @@ env:
   SKIP_CONDITION: ${{ contains(join(github.event.commits.*.message, ' '), '#skip') }}
 
 jobs:
-  simple_deployment_pipeline:
+  deployment_pipeline:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
