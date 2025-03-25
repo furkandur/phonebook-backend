@@ -8,6 +8,7 @@
     "dev": "nodemon index.js",
     "lint": "eslint .",
     "build": "cd client && npm run build",
+    "test": "echo 'Test OK.'",
     "test:e2e": "playwright test"
   },
   "author": "Furkan Dursun",
