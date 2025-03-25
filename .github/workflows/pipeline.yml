@@ -2,7 +2,8 @@ name: Deployment pipeline
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
   pull_request:
     branches: [main]
@@ -32,6 +33,41 @@ jobs:
 
       - name: Test
         run: npm run test
+
+      - name: Build failed
+        uses: sarisia/actions-status-discord@v1.15.3
+        if: ${{ !success() }}
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          description: Build failed!
+
+  playwright-test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    if: ${{ !contains(join(github.event.commits.*.message, ' '), '#skip') }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
 
   tag-release:
     needs: [simple_deployment_pipeline, playwright-test]
