@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const Person = require('./models/person')
+const Person = require('./server/models/person')
 
 app.use(express.static('dist'))
 
@@ -28,9 +28,10 @@ const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
 }
 
-app.get('/info', (request, response) => {
+app.get('/info', async (request, response) => {
+  const persons = await Person.countDocuments()
   response.send(
-    `<p>Phonebook has info for ${persons.length} people</p>
+    `<p>Phonebook has info for ${persons} people</p>
         <p>${new Date()}<p/>`)
 })
 
@@ -59,7 +60,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 app.delete('/api/persons/:id', (request, response, next) => {
   Person
     .findByIdAndDelete(request.params.id)
-    .then(result => {
+    .then(() => {
       response.status(204).end()
     })
     .catch(error => next(error))
