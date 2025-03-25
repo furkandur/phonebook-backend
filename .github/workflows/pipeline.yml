@@ -22,8 +22,11 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install dependencies
+      - name: Install server dependencies
         run: npm install
+
+      - name: Install client dependencies
+        run: cd client && npm install
 
       - name: Check style
         run: npm run lint
