@@ -70,7 +70,7 @@ jobs:
           retention-days: 30
 
   tag-release:
-    needs: [simple_deployment_pipeline, playwright-test]
+    needs: [deployment_pipeline, playwright-test]
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' }}
     steps:
