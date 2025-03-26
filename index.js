@@ -2,6 +2,8 @@ const express = require('express')
 const app = express()
 const Person = require('./server/models/person')
 
+//pull req for mluukkai
+
 app.use(express.static('dist'))
 
 const errorHandler = (error, request, response, next) => {
